@@ -1,37 +1,56 @@
 // Uncomment the code below and write your tests
-// import { getBankAccount } from '.';
+import { getBankAccount, InsufficientFundsError, TransferFailedError } from '.';
 
 describe('BankAccount', () => {
+  const initialValue = 5000;
+  const BankAccount = getBankAccount(initialValue);
   test('should create account with initial balance', () => {
-    // Write your test here
+    expect(BankAccount.getBalance()).toBe(initialValue);
   });
 
   test('should throw InsufficientFundsError error when withdrawing more than balance', () => {
-    // Write your test here
+    const draw = 6000;
+    expect(() => {
+      BankAccount.withdraw(draw);
+    }).toThrow(new InsufficientFundsError(BankAccount.getBalance()));
   });
 
   test('should throw error when transferring more than balance', () => {
-    // Write your test here
+    const someBankAccount = getBankAccount(10000);
+    const draw = 6000;
+    expect(() => {
+      BankAccount.transfer(draw, someBankAccount);
+    }).toThrow(new InsufficientFundsError(BankAccount.getBalance()));
   });
 
   test('should throw error when transferring to the same account', () => {
-    // Write your test here
+    const draw = 6000;
+    expect(() => {
+      BankAccount.transfer(draw, BankAccount);
+    }).toThrow(new TransferFailedError());
   });
 
   test('should deposit money', () => {
-    // Write your test here
+    expect(BankAccount.deposit(1000)).toBe(BankAccount);
   });
 
   test('should withdraw money', () => {
-    // Write your test here
+    expect(BankAccount.withdraw(1000)).toBe(BankAccount);
   });
 
   test('should transfer money', () => {
-    // Write your test here
+    const someBankAccount = getBankAccount(10000);
+    const draw = 3000;
+    expect(BankAccount.transfer(draw, someBankAccount)).toBe(BankAccount);
   });
 
   test('fetchBalance should return number in case if request did not failed', async () => {
-    // Write your tests here
+    try {
+      const balance = await BankAccount.fetchBalance();
+      expect(balance).toBe(typeof 1);
+    } catch (error) {
+      expect(error).toBe(null);
+    }
   });
 
   test('should set new balance if fetchBalance returned number', async () => {
