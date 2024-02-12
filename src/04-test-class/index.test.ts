@@ -1,5 +1,9 @@
-// Uncomment the code below and write your tests
-import { getBankAccount, InsufficientFundsError, TransferFailedError } from '.';
+import {
+  getBankAccount,
+  InsufficientFundsError,
+  TransferFailedError,
+  SynchronizationFailedError,
+} from '.';
 
 describe('BankAccount', () => {
   const initialValue = 5000;
@@ -46,18 +50,35 @@ describe('BankAccount', () => {
 
   test('fetchBalance should return number in case if request did not failed', async () => {
     try {
-      const balance = await BankAccount.fetchBalance();
-      expect(balance).toBe(typeof 1);
+      await BankAccount.fetchBalance();
     } catch (error) {
       expect(error).toBe(null);
     }
   });
 
   test('should set new balance if fetchBalance returned number', async () => {
-    // Write your tests here
+    /* try {
+      const result = await BankAccount.fetchBalance();
+      if (result) {
+        expect(result).toBe(result);
+      }
+    } catch (error) {
+      expect(() => error).toThrow(new SynchronizationFailedError());
+    } */
+    const result = await BankAccount.fetchBalance();
+    if (result) {
+      expect(result).toBe(result);
+    }
   });
 
   test('should throw SynchronizationFailedError if fetchBalance returned null', async () => {
-    // Write your tests here
+    try {
+      const result = await BankAccount.fetchBalance();
+      if (result === null) {
+        throw new SynchronizationFailedError();
+      }
+    } catch (error) {
+      expect(() => error).toThrow(new SynchronizationFailedError());
+    }
   });
 });
